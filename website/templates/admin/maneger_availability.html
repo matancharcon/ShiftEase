@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Maneger Availability{% endblock %}
+{% block content %}
+<div class="container">
+  <h1 align="center">Maneger Availability</h1>
+  <table class="table table-bordered">
+    <thead class="thead-dark">
+      <tr>
+        <th>Day</th>
+        <th>Date</th>
+        <th>Day Shift</th>
+        <th>Night Shift</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for day, date in dates.items() %}
+        <tr>
+          <td>{{ day }}</td>
+          <td>{{ date }}</td>
+          <td>{% for maneger_availability in manegers_availability %}
+                {% for availability in maneger_availability.availabilities %}  
+                  {% if availability.day_shift and availability.day == day %}
+                     {{ maneger_availability.full_name }}
+                  {% endif %}   
+                {% endfor %}
+              {% endfor %}  
+          </td>
+          <td>{% for maneger_availability in manegers_availability %}
+                {% for availability in maneger_availability.availabilities %}  
+                    {% if availability.night_shift and availability.day == day %}
+                       {{ maneger_availability.full_name }}
+                    {% endif %}
+                {% endfor %}
+              {% endfor %}  
+          </td>
+          <td>{{ day }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

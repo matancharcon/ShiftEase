@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Selected Waiter Availability{% endblock %}
+{% block content %}
+<div class="container">
+  <h1 align="center">Selected Waiter Availability</h1>
+  <form method="POST" action="{{ url_for('admin.show_selected_availability') }}">
+    <table class="table table-bordered">
+      <thead class="thead-dark">
+        <tr>
+          <th>Day</th>
+          <th>Date</th>
+          <th>Day Shift</th>
+          <th>Night Shift</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        {% for day, date in dates.items() %}
+        <tr>
+          <td>{{ day }}</td>
+          <td>{{ date }}</td>
+          <td>
+            {% for waiter in selected_day_shift_waiters[day] %}
+              {{ waiter }}<br>
+            {% endfor %}
+          </td>
+          <td>
+            {% for waiter in selected_night_shift_waiters[day] %}
+              {{ waiter }}<br>
+            {% endfor %}
+          </td>
+        
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <h2 align="center">Shift Counts</h2>
+    <table class="table table-bordered">
+      <thead class="thead-dark">
+        <tr>
+          <th>Waiter</th>
+          <th>Number of shifts</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for waiter, count in shift_counts.items() %}
+        <tr>
+          <td>{{ waiter }}</td>
+          <td>{{ count }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary" onclick="return confirmUpload()">Upload Work Arrangements</button>
+    </div>
+  </form>
+</div>
+<script>
+  function confirmUpload() {
+    return confirm("Are you sure you want to update the work arrangements?");
+  }
+</script>
+{% endblock %}
