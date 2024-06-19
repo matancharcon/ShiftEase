@@ -2,6 +2,7 @@ from . import db
 from flask_login import UserMixin
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
+from sqlalchemy.dialects.postgresql import JSON
 
 class Note(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -33,10 +34,9 @@ class Availability(db.Model):
     notes = db.Column(db.Text)
 
 class WeeklyWorkArrangement(db.Model):
+    __tablename__ = 'weekly_work_arrangements'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    day = db.Column(db.String(20), nullable=False)
-    date = db.Column(db.String(50), nullable=False)
-    shift_type = db.Column(db.String(20), nullable=False)  # 'day' or 'night'
+    arrangements = db.Column(JSON, nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), default=func.now())
     notes = db.Column(db.Text)
+   

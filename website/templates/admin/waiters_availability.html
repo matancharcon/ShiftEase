@@ -47,7 +47,7 @@
           <td>
             {% for waiter_availability in waiters_availability %}
               {% for availability in waiter_availability.availabilities %}
-                {% if availability.date == date and availability.notes %}
+                {% if availability.date == day and availability.notes %}
                   {{ waiter_availability.full_name }}: {{ availability.notes }}<br>
                 {% endif %}
               {% endfor %}

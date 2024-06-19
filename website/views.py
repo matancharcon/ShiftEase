@@ -3,7 +3,7 @@ from os import abort
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
 from datetime import datetime, timedelta
-from .models import Note,Availability
+from .models import Note,Availability,WeeklyWorkArrangement
 from . import db
 import json
 
@@ -28,19 +28,17 @@ def home():
 
 def get_dates_for_week():
     today = datetime.today()
-    start_of_week = today - timedelta(days=today.weekday())  # Get the first day of the week
+    start_of_next_week = today + timedelta(days=(6 - today.weekday()))  # Get the first day of the next week
     dates = {
-        'Sunday': (start_of_week + timedelta(days=0)).strftime('%B %d, %Y'),
-        'Monday': (start_of_week + timedelta(days=1)).strftime('%B %d, %Y'),
-        'Tuesday': (start_of_week + timedelta(days=2)).strftime('%B %d, %Y'),
-        'Wednesday': (start_of_week + timedelta(days=3)).strftime('%B %d, %Y'),
-        'Thursday': (start_of_week + timedelta(days=4)).strftime('%B %d, %Y'),
-        'Friday': (start_of_week + timedelta(days=5)).strftime('%B %d, %Y'),
-        'Saturday': (start_of_week + timedelta(days=6)).strftime('%B %d, %Y'),
-
+        'Sunday': (start_of_next_week + timedelta(days=0)).strftime('%B %d, %Y'),
+        'Monday': (start_of_next_week + timedelta(days=1)).strftime('%B %d, %Y'),
+        'Tuesday': (start_of_next_week + timedelta(days=2)).strftime('%B %d, %Y'),
+        'Wednesday': (start_of_next_week + timedelta(days=3)).strftime('%B %d, %Y'),
+        'Thursday': (start_of_next_week + timedelta(days=4)).strftime('%B %d, %Y'),
+        'Friday': (start_of_next_week + timedelta(days=5)).strftime('%B %d, %Y'),
+        'Saturday': (start_of_next_week + timedelta(days=6)).strftime('%B %d, %Y'),
     }
     return dates
-
 @views.route('/availability_form', methods=['GET', 'POST'])
 @login_required
 def availability_form():
@@ -90,7 +88,22 @@ def show_availability():
     return render_template("show_availability.html", user=current_user, weekly_availability=weekly_availability)
 
 
-# @views.route('/week_availability')
-# @login_required
-# def week_availability():
 
+
+@views.route('/all_work_arrangements', methods=['GET'])
+@login_required
+def all_work_arrangements():
+    user_id = current_user.id
+    work_arrangements = WeeklyWorkArrangement.query.order_by(WeeklyWorkArrangement.created_at.asc()).all()
+    
+    # Convert to dictionaries
+    work_arrangements_dict = [
+        {
+            'created_at': wa.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+            'notes': wa.notes,
+            'arrangements': wa.arrangements
+        }
+        for wa in work_arrangements
+    ]
+
+    return render_template('all_work_arrangements.html', user=current_user, work_arrangements=work_arrangements_dict)

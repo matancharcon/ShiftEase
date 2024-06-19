@@ -32,6 +32,7 @@
           {% if user.is_authenticated %}
           <a class="nav-item nav-link" id="home" href="/">Home</a>
           <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
+          <a class="nav-item nav-link" id="work_arrangements" href="/all_work_arrangements">Work Arrangment</a>
               {% if user.has_availability() %}
                      <a class="nav-item nav-link" id="show_availability" href="/show_availability">Availability</a>
               {% else %}

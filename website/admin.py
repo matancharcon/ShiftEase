@@ -1,10 +1,11 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for,abort
+from flask import Blueprint, render_template, request, flash, redirect, url_for,abort,jsonify
 from .models import User,Availability,WeeklyWorkArrangement
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db   ##means from __init__.py import db
 from flask_login import login_user, login_required, logout_user, current_user
 from .views import get_dates_for_week
 from functools import wraps
+from datetime import datetime
 
 admin = Blueprint('admin', __name__)
 
@@ -46,21 +47,30 @@ def show_selected_availability():
     if request.method == 'POST':
         selected_day_shift_waiters = {}
         selected_night_shift_waiters = {}
+        arrangements = {}
         dates=get_dates_for_week()
         # Iterate over all possible days
-        for date in dates:
+        for day,date in dates.items():
             # Retrieve selected day shift waiters for the current day
-            selected_day_shift_waiters[date] = request.form.getlist(f'day_shift_waiters_{date}')
+            selected_day_shift_waiters[day] = request.form.getlist(f'day_shift_waiters_{day}')
             
             # Retrieve selected night shift waiters for the current day
-            selected_night_shift_waiters[date] = request.form.getlist(f'night_shift_waiters_{date}')
-        
-        # Retrieve the text field value
-        text_value = request.form.get('text_field')
+            selected_night_shift_waiters[day] = request.form.getlist(f'night_shift_waiters_{day}')
+            print(date)
+            arrangements[day] = {
+                'date': date,
+                'day_shift': selected_day_shift_waiters[day],
+                'night_shift': selected_night_shift_waiters[day]
+            }
 
-        print("Selected day shift waiters:", selected_day_shift_waiters)
-        print("Selected night shift waiters:", selected_night_shift_waiters)
-        print(text_value)
+
+            # Create new WeeklyWorkArrangement instance
+        new_arrangement = WeeklyWorkArrangement(
+            arrangements=arrangements,
+            notes=request.form.get('text_field')
+        )
+        db.session.add(new_arrangement)
+        db.session.commit()   
 
     shift_counts = {}
     for date in selected_day_shift_waiters:
@@ -73,53 +83,28 @@ def show_selected_availability():
     return render_template('admin/selected_availability_waiters.html',user=current_user, selected_day_shift_waiters=selected_day_shift_waiters,selected_night_shift_waiters=selected_night_shift_waiters, shift_counts=shift_counts,dates=dates)
 
 
-# @admin.route('/admin/finalize_availability', methods=['POST'])
-# @admin_required
-# @login_required
-# def finalize_availability():
-#     if request.method == 'POST':
-#         selected_day_shift_waiters = {}
-#         selected_night_shift_waiters = {}
-#         dates=get_dates_for_week()
-#         # Iterate over all possible days
-#         for date in [dates]:
-#             # Retrieve selected day shift waiters for the current day
-#             selected_day_shift_waiters[date] = request.form.getlist(f'day_shift_waiters_{date}')
-            
-#             # Retrieve selected night shift waiters for the current day
-#             selected_night_shift_waiters[date] = request.form.getlist(f'night_shift_waiters_{date}')
-        
-#         # Retrieve the text field value
-#         text_value = request.form.get('text_field')
+@admin.route('/admin/users/edit/<int:user_id>', methods=['POST'])
+@admin_required
+@login_required
+def edit_user(user_id):
+    print("edit")
+    user = User.query.get_or_404(user_id)
+    data = request.get_json()
+    user.full_name = data['full_name']
+    print(user.full_name)
+    user.email = data['email']
+    user.user_type = data['user_type']
+    user.is_admin = data['is_admin']
+    print(user.full_name)
+    db.session.commit()
+    return jsonify({'success': True})
 
-#         print("Selected day shift waiters:", selected_day_shift_waiters)
-#         print("Selected night shift waiters:", selected_night_shift_waiters)
-#         print(text_value)
-
-#         dates=get_dates_for_week()
-#         for date in dates:
-#             for waiter_name in selected_day_shift_waiters[date]:
-#                 user = User.query.filter_by(full_name=waiter_name).first()
-#                 if user:
-#                     new_arrangement = WeeklyWorkArrangement(
-#                         user_id=user.id,
-#                         date=date,
-#                         date=dates[day],
-#                         shift_type='day'
-#                     )
-#                     db.session.add(new_arrangement)
-                    
-#             for waiter_name in selected_night_shift_waiters[day]:
-#                 user = User.query.filter_by(full_name=waiter_name).first()
-#                 if user:
-#                     new_arrangement = WeeklyWorkArrangement(
-#                         user_id=user.id,
-#                         day=day,
-#                         date=dates[day],
-#                         shift_type='night'
-#                     )
-#                     db.session.add(new_arrangement)
-
-#     db.session.commit()
-#     flash('Work arrangements finalized and saved!', 'success')
-#     return redirect(url_for('admin.html'))
+@admin.route('/admin/users/delete/<int:user_id>', methods=['POST'])
+@admin_required
+@login_required
+def delete_user(user_id): 
+    user = User.query.get_or_404(user_id)
+    print(user_id)
+    db.session.delete(user)
+    db.session.commit()
+    return jsonify({'success': True})
