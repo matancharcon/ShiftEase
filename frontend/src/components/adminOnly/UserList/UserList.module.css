@@ -1,0 +1,109 @@
+.userListContainer {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+.userListContainer h2 {
+    color: #444;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.userListContainer form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    max-width: 400px;
+}
+
+.userListContainer form div {
+    margin-bottom: 15px;
+}
+
+.userListContainer label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.userListContainer input[type="text"],
+.userListContainer input[type="email"],
+.userListContainer select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.userListContainer input[type="checkbox"] {
+    margin-left: 5px;
+}
+
+.userListContainer button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.userListContainer button:hover {
+    background-color: #0056b3;
+}
+
+.userListContainer button[type="submit"] {
+    margin-right: 10px;
+}
+
+.userListContainer button[type="button"] {
+    background-color: #6c757d;
+}
+
+.userListContainer button[type="button"]:hover {
+    background-color: #5a6268;
+}
+
+.userListContainer table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    margin-top: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.userListContainer thead {
+    background-color: #343a40;
+    color: #fff;
+}
+
+.userListContainer thead th {
+    padding: 12px 15px;
+    text-align: left;
+}
+
+.userListContainer tbody td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+.userListContainer tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.userListContainer tbody td:last-child {
+    text-align: center;
+    padding-right: 20px; 
+}
+
+.userListContainer p[style="color: red;"] {
+    color: #d9534f;
+    font-weight: bold;
+}
