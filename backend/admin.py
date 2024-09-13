@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from .models import User, Availability, WeeklyWorkArrangement
-from . import db   # means from __init__.py import db
+from . import db   
 from flask_login import login_required, current_user
 from functools import wraps
 from flask_jwt_extended import jwt_required, get_jwt_identity
