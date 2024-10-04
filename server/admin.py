@@ -1,7 +1,6 @@
 from flask import Blueprint, jsonify, request
 from .models import User, Availability, WeeklyWorkArrangement
 from . import db   
-from flask_login import login_required, current_user
 from functools import wraps
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
@@ -130,3 +129,12 @@ def delete_weekly_work_arrangement():
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+    
+
+@admin.route('/health')
+def health():
+    return "OK", 200
+@admin.route('/test_db')
+def test_db():
+    result = db.session.execute("SELECT * FROM user")
+    return {'users': [row for row in result]}

@@ -12,7 +12,7 @@ const SignUp = () => {
     });
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
-    const url = "http://127.0.0.1:5000/sign-up";
+     const url = "http://localhost:5000/sign-up"; 
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;

@@ -8,7 +8,7 @@ const LogIn = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
-    const url = "http://127.0.0.1:5000/login";
+    const url = "http://localhost:5000/login";
 
     const handleLogin = async (e) => {
         e.preventDefault();

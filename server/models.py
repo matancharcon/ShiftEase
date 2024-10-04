@@ -1,9 +1,8 @@
 from . import db
-from flask_login import UserMixin
 from sqlalchemy.sql import func
 from sqlalchemy.dialects.postgresql import JSON
 
-class User(db.Model, UserMixin):
+class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     full_name = db.Column(db.String(150))
     email = db.Column(db.String(150), unique=True)

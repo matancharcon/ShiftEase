@@ -1,0 +1,6 @@
+.env
+node_modules/
+instance/
+__pycache__/
+dist/
+.idea/

@@ -1,7 +1,6 @@
 from os import abort
 
 from flask import Blueprint
-from flask_login import current_user
 from datetime import datetime, timedelta
 from .models import Availability,WeeklyWorkArrangement,User
 from sqlalchemy import and_
@@ -88,6 +87,12 @@ def availability():
 @jwt_required()
 def show_availability():
    
+    current_user_email = get_jwt_identity()
+    current_user = User.query.filter_by(email=current_user_email).first()
+    
+    if not current_user:
+        return jsonify({'error': 'User not found'}), 404
+
     availability_list = Availability.query.filter_by(user_id=current_user.id).all()
     
 

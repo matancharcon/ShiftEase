@@ -1,0 +1,8 @@
+node_modules
+npm-debug.log
+dist/
+.eslintcache
+.git
+Dockerfile
+.dockerignore
+.eslintrc.cjs
